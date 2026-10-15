@@ -26,6 +26,7 @@ main{max-width:1100px;margin:auto}.top{display:flex;align-items:center;gap:12px;
 <div class="field"><label for="since">收录时间</label><select id="since"><option value="">不限时间</option><option value="30d">近 30 天</option><option value="365d">近一年</option></select></div>
 <div class="field"><label for="quality">画质</label><select id="quality"><option value="">不限画质</option><option value="4k">4K</option><option value="1080p">1080P</option><option value="720p">720P</option></select></div>
 <div class="field"><label for="size">资源体积</label><select id="size"><option value="">不限体积</option><option value="s">小于 1GB</option><option value="m">1–10GB</option><option value="l">10–50GB</option><option value="xl">大于 50GB</option></select></div>
+<div class="field"><label for="wide">搜索范围</label><select id="wide"><option value="0">普通搜索（更快）</option><option value="1">扩大搜索（更多结果）</option></select></div>
 </div>
 <div class="sub">搜索由第三方公开索引 API 提供；“全部网盘”会分别请求多个来源，速度取决于上游服务。</div>
 <div class="suggestions" id="suggestions"></div>
@@ -47,7 +48,7 @@ async function suggest(q){const box=$('suggestions');if(q.length<1){box.innerHTM
 async function search(){
  const q=kw.value.trim();if(!q){status.textContent='请先输入关键词。';kw.focus();return}lastQuery=q;
  $('go').disabled=true;$('go').textContent='搜索中…';status.textContent='正在查询公开资源索引…';results.innerHTML='';pager.innerHTML='';count.textContent='搜索中';
- const params={q,pan:$('pan').value,p:String(page),cat:$('cat').value,sort:$('sort').value,mode:$('mode').value,year:$('year').value.trim(),since:$('since').value,quality:$('quality').value,size:$('size').value};
+ const params={q,pan:$('pan').value,p:String(page),cat:$('cat').value,sort:$('sort').value,mode:$('mode').value,year:$('year').value.trim(),since:$('since').value,quality:$('quality').value,size:$('size').value,wide:$('wide')?.value||'0'};
  try{
   let data=[];
   if(params.pan==='all'){
@@ -56,7 +57,8 @@ async function search(){
    settled.forEach((v,i)=>{if(v.status==='fulfilled')data.push(...v.value.items.map(x=>({...x,pan:x.pan||pans[i]})))});
    data=dedupe(data);lastItems=data;count.textContent=`找到 ${data.length} 条（多网盘合并结果）`;
   }else{
-   const j=await fetchResults(params);data=j.items;lastItems=data;count.textContent=`${j.total??data.length} 条收录结果`; 
+   const j=await fetchResults(params);data=j.items;lastItems=data;
+   count.textContent=`${j.total??data.length} 条索引结果${params.wide==='1'?'（扩大搜索）':''}`;
   }
   if(!data.length){results.innerHTML='<div class="empty">没有找到匹配结果。试试缩短关键词、切换匹配方式或选择其他网盘。多网盘查询也可能因某些来源暂时不可用而不完整。</div>';status.textContent='搜索完成';return}
   results.innerHTML=data.map((x,i)=>card(x,i)).join('');
