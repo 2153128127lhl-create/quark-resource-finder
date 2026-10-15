@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="夸克网盘资源直搜，聚合公开索引中的分享资源。">
+<title>夸克直搜 · 资源搜索</title>
+<style>
+:root{--bg:#0b1020;--line:#2a3854;--text:#edf3ff;--muted:#9aabc8;--a:#75b1ff;--b:#62e0d0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#263e68 0%,#0b1020 55%);color:var(--text);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh;padding:24px 15px}main{max-width:940px;margin:auto}.top{display:flex;align-items:center;gap:12px;margin:12px 0 44px}.logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),var(--b));font-weight:900;color:#071426;font-size:24px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--b);font-weight:800}.top h1{font-size:22px;margin:0}.hero{text-align:center;margin-bottom:24px}.hero h2{font-size:clamp(29px,5vw,44px);margin:0 0 10px;letter-spacing:-1px}.hero p{color:var(--muted);margin:0}.search{display:flex;gap:9px;background:#111a2d;border:1px solid #344767;border-radius:18px;padding:9px;box-shadow:0 20px 55px #0003}.search input{flex:1;min-width:0;background:transparent;border:0;outline:0;padding:12px;color:var(--text);font-size:16px}.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--a),var(--b));color:#071426}.btn:disabled{opacity:.65;cursor:wait}.sub,.status{color:var(--muted);font-size:12px;margin:9px 4px}.status{color:var(--b);min-height:22px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chip{background:#121b2e;border:1px solid var(--line);border-radius:999px;color:#d6e3fb;padding:8px 13px;cursor:pointer}.chip.on{border-color:var(--a);background:#203453}.heading{display:flex;justify-content:space-between;gap:10px;margin:28px 0 12px}.heading h3{font-size:15px;margin:0}.heading span{font-size:12px;color:var(--muted)}.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.result{border:1px solid var(--line);border-radius:15px;padding:16px;background:linear-gradient(145deg,#151f34,#101729);min-width:0}.result h4{margin:0 0 8px;font-size:15px;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted);margin:0 0 10px}.url{color:#a9d1ff;text-decoration:none;overflow-wrap:anywhere;font-size:12px}.url:hover{text-decoration:underline}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.actions button{border:1px solid #3a4e70;background:#1b2b47;border-radius:9px;color:#edf3ff;padding:8px 10px;cursor:pointer}.empty,.note{border:1px solid var(--line);border-radius:14px;padding:15px;background:#111a2b;color:var(--muted);font-size:12px;margin-top:16px;line-height:1.8}.note strong{color:#dce8ff}.footer{text-align:center;color:#71809c;font-size:11px;margin:22px 0}.pager{display:flex;justify-content:center;gap:8px;margin-top:16px}.pager button{background:#1b2b47;border:1px solid #3a4e70;color:white;padding:9px 14px;border-radius:9px;cursor:pointer}
+@media(max-width:600px){body{padding:17px 12px}.top{margin-bottom:32px}.search{flex-direction:column}.search .btn{padding:14px}.results{grid-template-columns:1fr}}
+</style></head><body><main>
+<div class="top"><div class="logo">夸</div><div><div class="eyebrow">QUARK RESOURCE SEARCH</div><h1>夸克网盘直搜</h1></div></div>
+<section class="hero"><h2>搜资源，不用到处翻</h2><p>从公开资源索引中查找夸克网盘分享信息。</p></section>
+<form class="search" id="form"><input id="kw" maxlength="60" placeholder="输入电影、课程、电子书、软件名称…" autocomplete="off"><button class="btn" id="go">一键搜索 ↗</button></form>
+<div class="sub">搜索来源：盘搜索公开 API · 无需登录夸克账号</div><div class="status" id="status" aria-live="polite"></div>
+<div class="chips"><button class="chip" data-q="电影">🎬 电影</button><button class="chip" data-q="电视剧">📺 电视剧</button><button class="chip" data-q="动漫">✨ 动漫</button><button class="chip" data-q="学习资料">📚 学习资料</button><button class="chip" data-q="电子书">📖 电子书</button><button class="chip" data-q="软件">💻 软件</button><button class="chip" data-q="纪录片">🌏 纪录片</button><button class="chip" data-q="音乐">🎧 音乐</button></div>
+<div class="heading"><h3>搜索结果</h3><span id="count">输入关键词开始</span></div><div id="results" class="results"></div><div class="pager" id="pager"></div>
+<div class="note"><strong>数据来源与说明</strong><br>本网站通过后端请求盘搜索公开 API（pansousuo.com），按夸克网盘类型查询其已收录的资源。API 默认查询索引库，不代表实时全网爬取；上游索引覆盖、接口策略、结果准确性和可用性由第三方服务决定。<br><strong>版权与隐私：</strong>搜索词会发送给第三方 API。本网站不要求夸克账号密码，不提供资源文件托管。请只访问你有权使用的内容；如资源涉及侵权，请勿下载或传播。</div>
+<div class="footer">独立第三方搜索界面 · 与夸克官方无隶属关系</div></main>
+<script>
+const $=id=>document.getElementById(id);const kw=$('kw'),status=$('status'),results=$('results'),count=$('count'),pager=$('pager');let page=1,lastQuery='';
+$('form').addEventListener('submit',e=>{e.preventDefault();page=1;search()});
+document.querySelectorAll('[data-q]').forEach(b=>b.addEventListener('click',()=>{kw.value=b.dataset.q;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));kw.focus()}));
+async function search(){
+ const q=kw.value.trim();if(!q){status.textContent='请先输入关键词。';kw.focus();return}lastQuery=q;
+ $('go').disabled=true;$('go').textContent='搜索中…';status.textContent='正在查询公开资源索引…';results.innerHTML='';pager.innerHTML='';count.textContent='搜索中';
+ try{
+  const res=await fetch('/api/search?q='+encodeURIComponent(q)+'&pan=quark&p='+page);
+  const j=await res.json();if(!res.ok||!j.ok)throw new Error(j.error||'搜索接口暂时不可用');
+  const items=Array.isArray(j.items)?j.items:(Array.isArray(j.data?.items)?j.data.items:[]);
+  count.textContent=(j.total??items.length)+' 条收录结果';
+  if(!items.length){results.innerHTML='<div class="empty">没有找到匹配的收录结果。试试更短的关键词、作品全名或其他写法。</div>';status.textContent=j.blocked?'该关键词触发了上游安全过滤。':'搜索完成';return}
+  results.innerHTML=items.map((x,i)=>{const title=x.title||'未命名资源';const url=x.share_url||x.url||x.link||'';const code=x.access_code||x.code||'';const cat=x.category||'未分类';const year=x.year?(' · '+x.year):'';return `<article class="result"><h4>${esc(title)}</h4><p class="meta">${esc(cat+year)}${code?' · 提取码：'+code:''}</p>${url?`<a class="url" href="${escAttr(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>`:'<span class="meta">此条记录未返回分享地址</span>'}<div class="actions">${url?`<button data-copy="${i}">复制链接</button><button data-open="${i}">打开分享</button>`:''}${code?`<button data-code="${i}">复制提取码</button>`:''}<button data-report="${escAttr(String(x.id??''))}">反馈问题</button></div></article>`}).join('');
+  results.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copy(items[+b.dataset.copy].share_url||items[+b.dataset.copy].url||items[+b.dataset.copy].link));
+  results.querySelectorAll('[data-code]').forEach(b=>b.onclick=()=>copy(items[+b.dataset.code].access_code||items[+b.dataset.code].code));
+  results.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{const x=items[+b.dataset.open];window.open(x.share_url||x.url||x.link,'_blank','noopener')});
+  results.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>{status.textContent='如链接失效或信息不准确，请在盘搜索官方页面提交反馈。';window.open('https://pansousuo.com/api-docs','_blank','noopener')});
+  const totalPages=Number(j.totalPages||1);if(page>1){const prev=document.createElement('button');prev.textContent='上一页';prev.onclick=()=>{page--;search()};pager.append(prev)}if(page<totalPages){const next=document.createElement('button');next.textContent='下一页';next.onclick=()=>{page++;search()};pager.append(next)}
+  status.textContent='搜索完成 · 来源：盘搜索公开索引';
+ }catch(e){count.textContent='搜索失败';status.textContent=e.message;results.innerHTML='<div class="empty">暂时无法取得结果。请稍后重试；如果持续失败，可能是上游 API 暂时不可用或接口规则发生变化。</div>'}
+ finally{$('go').disabled=false;$('go').textContent='一键搜索 ↗'}
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function escAttr(s){return esc(s)}
+async function copy(t){if(!t)return;try{await navigator.clipboard.writeText(t);status.textContent='已复制到剪贴板'}catch(e){prompt('复制下面内容：',t)}}
+</script></body></html>
