@@ -1,43 +1,84 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="夸克网盘资源直搜，聚合公开索引中的分享资源。">
-<title>夸克直搜 · 资源搜索</title>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="多网盘资源搜索，检索公开索引中的分享资源。">
+<title>云搜 · 多网盘资源搜索</title>
 <style>
-:root{--bg:#0b1020;--line:#2a3854;--text:#edf3ff;--muted:#9aabc8;--a:#75b1ff;--b:#62e0d0}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#263e68 0%,#0b1020 55%);color:var(--text);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh;padding:24px 15px}main{max-width:940px;margin:auto}.top{display:flex;align-items:center;gap:12px;margin:12px 0 44px}.logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),var(--b));font-weight:900;color:#071426;font-size:24px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--b);font-weight:800}.top h1{font-size:22px;margin:0}.hero{text-align:center;margin-bottom:24px}.hero h2{font-size:clamp(29px,5vw,44px);margin:0 0 10px;letter-spacing:-1px}.hero p{color:var(--muted);margin:0}.search{display:flex;gap:9px;background:#111a2d;border:1px solid #344767;border-radius:18px;padding:9px;box-shadow:0 20px 55px #0003}.search input{flex:1;min-width:0;background:transparent;border:0;outline:0;padding:12px;color:var(--text);font-size:16px}.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--a),var(--b));color:#071426}.btn:disabled{opacity:.65;cursor:wait}.sub,.status{color:var(--muted);font-size:12px;margin:9px 4px}.status{color:var(--b);min-height:22px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chip{background:#121b2e;border:1px solid var(--line);border-radius:999px;color:#d6e3fb;padding:8px 13px;cursor:pointer}.chip.on{border-color:var(--a);background:#203453}.heading{display:flex;justify-content:space-between;gap:10px;margin:28px 0 12px}.heading h3{font-size:15px;margin:0}.heading span{font-size:12px;color:var(--muted)}.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.result{border:1px solid var(--line);border-radius:15px;padding:16px;background:linear-gradient(145deg,#151f34,#101729);min-width:0}.result h4{margin:0 0 8px;font-size:15px;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted);margin:0 0 10px}.url{color:#a9d1ff;text-decoration:none;overflow-wrap:anywhere;font-size:12px}.url:hover{text-decoration:underline}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.actions button{border:1px solid #3a4e70;background:#1b2b47;border-radius:9px;color:#edf3ff;padding:8px 10px;cursor:pointer}.empty,.note{border:1px solid var(--line);border-radius:14px;padding:15px;background:#111a2b;color:var(--muted);font-size:12px;margin-top:16px;line-height:1.8}.note strong{color:#dce8ff}.footer{text-align:center;color:#71809c;font-size:11px;margin:22px 0}.pager{display:flex;justify-content:center;gap:8px;margin-top:16px}.pager button{background:#1b2b47;border:1px solid #3a4e70;color:white;padding:9px 14px;border-radius:9px;cursor:pointer}
-@media(max-width:600px){body{padding:17px 12px}.top{margin-bottom:32px}.search{flex-direction:column}.search .btn{padding:14px}.results{grid-template-columns:1fr}}
-</style></head><body><main>
-<div class="top"><div class="logo">夸</div><div><div class="eyebrow">QUARK RESOURCE SEARCH</div><h1>夸克网盘直搜</h1></div></div>
-<section class="hero"><h2>搜资源，不用到处翻</h2><p>从公开资源索引中查找夸克网盘分享信息。</p></section>
-<form class="search" id="form"><input id="kw" maxlength="60" placeholder="输入电影、课程、电子书、软件名称…" autocomplete="off"><button class="btn" id="go">一键搜索 ↗</button></form>
-<div class="sub">搜索来源：盘搜索公开 API · 无需登录夸克账号</div><div class="status" id="status" aria-live="polite"></div>
+:root{color-scheme:dark;--bg:#090f1d;--panel:#111b2d;--line:#263852;--text:#edf4ff;--muted:#9bacc7;--blue:#82b7ff;--mint:#62e4ce;--warn:#ffc878}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#233c64 0%,#090f1d 58%);color:var(--text);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh;padding:22px 14px}
+main{max-width:1100px;margin:auto}.top{display:flex;align-items:center;gap:12px;margin:10px 0 34px}.logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--mint));font-weight:900;color:#071426;font-size:23px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--mint);font-weight:800}.top h1{font-size:21px;margin:0}.hero{text-align:center;margin-bottom:24px}.hero h2{font-size:clamp(28px,4.5vw,42px);margin:0 0 8px;letter-spacing:-1px}.hero p{color:var(--muted);margin:0}
+.panel{border:1px solid var(--line);background:#101a2bcc;border-radius:20px;padding:16px;box-shadow:0 18px 50px #0003}.search{display:flex;gap:9px}.search input{flex:1;min-width:0;background:#0b1322;border:1px solid #334866;border-radius:12px;padding:14px;color:var(--text);font-size:16px;outline:none}.search input:focus,select:focus{border-color:var(--blue)}.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--blue),var(--mint));color:#071426}.btn:disabled{opacity:.6;cursor:wait}
+.filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}.field label{display:block;font-size:12px;color:var(--muted);margin:0 0 5px}.field select,.field input{width:100%;background:#0b1322;border:1px solid #30425d;border-radius:10px;color:var(--text);padding:10px;min-width:0}.sub,.status{color:var(--muted);font-size:12px;margin:9px 4px}.status{color:var(--mint);min-height:22px}.suggestions{display:flex;gap:7px;flex-wrap:wrap;margin:8px 3px 0}.suggestions button,.chip{background:#121e32;border:1px solid var(--line);border-radius:999px;color:#dce9ff;padding:7px 11px;cursor:pointer;font-size:12px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.chip{font-size:13px}.heading{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:25px 0 12px}.heading h3{font-size:16px;margin:0}.heading span{font-size:12px;color:var(--muted)}.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.result{border:1px solid var(--line);border-radius:15px;padding:16px;background:linear-gradient(145deg,#151f34,#101729);min-width:0}.result h4{margin:0 0 8px;font-size:15px;overflow-wrap:anywhere}.badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}.badge{font-size:11px;border:1px solid #365072;border-radius:999px;padding:2px 8px;color:#b8d7ff}.meta{font-size:12px;color:var(--muted);margin:0 0 10px}.url{color:#a9d1ff;text-decoration:none;overflow-wrap:anywhere;font-size:12px}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.actions button,.pager button{border:1px solid #3a4e70;background:#1b2b47;border-radius:9px;color:#edf3ff;padding:8px 10px;cursor:pointer}.empty,.note{border:1px solid var(--line);border-radius:14px;padding:15px;background:#111a2b;color:var(--muted);font-size:12px;margin-top:16px;line-height:1.8}.note strong{color:#dce8ff}.pager{display:flex;justify-content:center;gap:8px;margin-top:16px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.stat{border:1px solid var(--line);border-radius:12px;padding:12px;background:#0c1525}.stat strong{display:block;font-size:19px}.stat span{font-size:11px;color:var(--muted)}.footer{text-align:center;color:#71809c;font-size:11px;margin:22px 0}
+@media(max-width:700px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.results{grid-template-columns:1fr}}@media(max-width:460px){body{padding:15px 10px}.search{flex-direction:column}.search .btn{padding:14px}.filters{grid-template-columns:1fr 1fr}.panel{padding:12px}}
+</style></head>
+<body><main>
+<header class="top"><div class="logo">云</div><div><div class="eyebrow">CLOUD RESOURCE SEARCH</div><h1>云搜 · 多网盘资源搜索</h1></div></header>
+<section class="hero"><h2>一个入口，搜索多个网盘</h2><p>检索第三方公开索引；结果是否有效，以分享页面实际状态为准。</p></section>
+<section class="panel">
+<form class="search" id="form"><input id="kw" maxlength="60" placeholder="输入电影、课程、电子书、软件名称…" autocomplete="off" aria-label="搜索关键词"><button class="btn" id="go">开始搜索 ↗</button></form>
+<div class="filters">
+<div class="field"><label for="pan">网盘来源</label><select id="pan"><option value="quark">夸克网盘</option><option value="all">全部网盘（逐个查询）</option><option value="baidu">百度网盘</option><option value="aliyun">阿里云盘</option><option value="xunlei">迅雷网盘</option><option value="uc">UC网盘</option><option value="tianyi">天翼云盘</option><option value="115">115网盘</option><option value="123">123网盘</option><option value="mobile">移动云盘</option></select></div>
+<div class="field"><label for="cat">资源类别</label><select id="cat"><option value="">全部类别</option><option value="movie">电影</option><option value="tv">电视剧</option><option value="anime">动漫</option><option value="book">电子书</option><option value="novel">小说</option><option value="software">软件</option><option value="course">课程</option><option value="music">音乐</option><option value="doc">纪录片</option></select></div>
+<div class="field"><label for="sort">排序方式</label><select id="sort"><option value="latest">最新收录</option><option value="hot">热门优先</option><option value="year">年份排序</option><option value="size">体积排序</option></select></div>
+<div class="field"><label for="mode">匹配方式</label><select id="mode"><option value="fuzzy">模糊匹配</option><option value="exact">精确匹配</option><option value="dedupe">去重模式</option></select></div>
+<div class="field"><label for="year">年份（可选）</label><input id="year" type="number" min="1800" max="2100" placeholder="例如 2024"></div>
+<div class="field"><label for="since">收录时间</label><select id="since"><option value="">不限时间</option><option value="30d">近 30 天</option><option value="365d">近一年</option></select></div>
+<div class="field"><label for="quality">画质</label><select id="quality"><option value="">不限画质</option><option value="4k">4K</option><option value="1080p">1080P</option><option value="720p">720P</option></select></div>
+<div class="field"><label for="size">资源体积</label><select id="size"><option value="">不限体积</option><option value="s">小于 1GB</option><option value="m">1–10GB</option><option value="l">10–50GB</option><option value="xl">大于 50GB</option></select></div>
+</div>
+<div class="sub">搜索由第三方公开索引 API 提供；“全部网盘”会分别请求多个来源，速度取决于上游服务。</div>
+<div class="suggestions" id="suggestions"></div>
+</section>
 <div class="chips"><button class="chip" data-q="电影">🎬 电影</button><button class="chip" data-q="电视剧">📺 电视剧</button><button class="chip" data-q="动漫">✨ 动漫</button><button class="chip" data-q="学习资料">📚 学习资料</button><button class="chip" data-q="电子书">📖 电子书</button><button class="chip" data-q="软件">💻 软件</button><button class="chip" data-q="纪录片">🌏 纪录片</button><button class="chip" data-q="音乐">🎧 音乐</button></div>
+<div class="status" id="status" aria-live="polite"></div>
+<div class="stats"><div class="stat"><strong id="statTotal">—</strong><span>上游索引总量</span></div><div class="stat"><strong id="statToday">—</strong><span>今日新增（上游统计）</span></div><div class="stat"><strong id="statSources">9</strong><span>可选网盘来源</span></div></div>
 <div class="heading"><h3>搜索结果</h3><span id="count">输入关键词开始</span></div><div id="results" class="results"></div><div class="pager" id="pager"></div>
-<div class="note"><strong>数据来源与说明</strong><br>本网站通过后端请求盘搜索公开 API（pansousuo.com），按夸克网盘类型查询其已收录的资源。API 默认查询索引库，不代表实时全网爬取；上游索引覆盖、接口策略、结果准确性和可用性由第三方服务决定。<br><strong>版权与隐私：</strong>搜索词会发送给第三方 API。本网站不要求夸克账号密码，不提供资源文件托管。请只访问你有权使用的内容；如资源涉及侵权，请勿下载或传播。</div>
-<div class="footer">独立第三方搜索界面 · 与夸克官方无隶属关系</div></main>
+<div class="note"><strong>搜索说明</strong><br>本网站调用盘搜索公开 API，默认查询其已收录的资源索引，不等于实时爬取整个互联网或网盘。多网盘搜索会逐个请求上游接口并合并展示，部分网盘可能没有匹配结果。分享链接可能失效；请遵守资源平台规则与版权法规。搜索关键词会发送给第三方服务，本网站不要求网盘账号密码，也不托管资源文件。</div>
+<div class="footer">独立第三方搜索界面 · 与各网盘平台无隶属关系</div>
+</main>
 <script>
-const $=id=>document.getElementById(id);const kw=$('kw'),status=$('status'),results=$('results'),count=$('count'),pager=$('pager');let page=1,lastQuery='';
+const $=id=>document.getElementById(id),kw=$('kw'),status=$('status'),results=$('results'),count=$('count'),pager=$('pager');
+let page=1,lastQuery='',lastItems=[];
 $('form').addEventListener('submit',e=>{e.preventDefault();page=1;search()});
-document.querySelectorAll('[data-q]').forEach(b=>b.addEventListener('click',()=>{kw.value=b.dataset.q;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));kw.focus()}));
+document.querySelectorAll('[data-q]').forEach(b=>b.addEventListener('click',()=>{kw.value=b.dataset.q;kw.focus();search()}));
+kw.addEventListener('input',debounce(()=>suggest(kw.value.trim()),280));
+async function suggest(q){const box=$('suggestions');if(q.length<1){box.innerHTML='';return}try{const r=await fetch('/api/suggest?q='+encodeURIComponent(q));const j=await r.json();const arr=Array.isArray(j)?(Array.isArray(j[1])?j[1]:j):Array.isArray(j.suggestions)?j.suggestions:[];box.innerHTML=arr.slice(0,6).map(s=>`<button type="button">${esc(typeof s==='string'?s:s.title||'')}</button>`).join('');box.querySelectorAll('button').forEach(b=>b.onclick=()=>{kw.value=b.textContent;box.innerHTML='';page=1;search()})}catch{box.innerHTML=''}}
 async function search(){
  const q=kw.value.trim();if(!q){status.textContent='请先输入关键词。';kw.focus();return}lastQuery=q;
  $('go').disabled=true;$('go').textContent='搜索中…';status.textContent='正在查询公开资源索引…';results.innerHTML='';pager.innerHTML='';count.textContent='搜索中';
+ const params={q,pan:$('pan').value,p:String(page),cat:$('cat').value,sort:$('sort').value,mode:$('mode').value,year:$('year').value.trim(),since:$('since').value,quality:$('quality').value,size:$('size').value};
  try{
-  const res=await fetch('/api/search?q='+encodeURIComponent(q)+'&pan=quark&p='+page);
-  const j=await res.json();if(!res.ok||!j.ok)throw new Error(j.error||'搜索接口暂时不可用');
-  const items=Array.isArray(j.items)?j.items:(Array.isArray(j.data?.items)?j.data.items:[]);
-  count.textContent=(j.total??items.length)+' 条收录结果';
-  if(!items.length){results.innerHTML='<div class="empty">没有找到匹配的收录结果。试试更短的关键词、作品全名或其他写法。</div>';status.textContent=j.blocked?'该关键词触发了上游安全过滤。':'搜索完成';return}
-  results.innerHTML=items.map((x,i)=>{const title=x.title||'未命名资源';const url=x.share_url||x.url||x.link||'';const code=x.access_code||x.code||'';const cat=x.category||'未分类';const year=x.year?(' · '+x.year):'';return `<article class="result"><h4>${esc(title)}</h4><p class="meta">${esc(cat+year)}${code?' · 提取码：'+code:''}</p>${url?`<a class="url" href="${escAttr(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>`:'<span class="meta">此条记录未返回分享地址</span>'}<div class="actions">${url?`<button data-copy="${i}">复制链接</button><button data-open="${i}">打开分享</button>`:''}${code?`<button data-code="${i}">复制提取码</button>`:''}<button data-report="${escAttr(String(x.id??''))}">反馈问题</button></div></article>`}).join('');
-  results.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copy(items[+b.dataset.copy].share_url||items[+b.dataset.copy].url||items[+b.dataset.copy].link));
-  results.querySelectorAll('[data-code]').forEach(b=>b.onclick=()=>copy(items[+b.dataset.code].access_code||items[+b.dataset.code].code));
-  results.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{const x=items[+b.dataset.open];window.open(x.share_url||x.url||x.link,'_blank','noopener')});
-  results.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>{status.textContent='如链接失效或信息不准确，请在盘搜索官方页面提交反馈。';window.open('https://pansousuo.com/api-docs','_blank','noopener')});
-  const totalPages=Number(j.totalPages||1);if(page>1){const prev=document.createElement('button');prev.textContent='上一页';prev.onclick=()=>{page--;search()};pager.append(prev)}if(page<totalPages){const next=document.createElement('button');next.textContent='下一页';next.onclick=()=>{page++;search()};pager.append(next)}
-  status.textContent='搜索完成 · 来源：盘搜索公开索引';
- }catch(e){count.textContent='搜索失败';status.textContent=e.message;results.innerHTML='<div class="empty">暂时无法取得结果。请稍后重试；如果持续失败，可能是上游 API 暂时不可用或接口规则发生变化。</div>'}
- finally{$('go').disabled=false;$('go').textContent='一键搜索 ↗'}
+  let data=[];
+  if(params.pan==='all'){
+   const pans=['quark','baidu','aliyun','xunlei','uc','tianyi','115','123','mobile'];
+   const settled=await Promise.allSettled(pans.map(p=>fetchResults({...params,pan:p})));
+   settled.forEach((v,i)=>{if(v.status==='fulfilled')data.push(...v.value.items.map(x=>({...x,pan:x.pan||pans[i]})))});
+   data=dedupe(data);lastItems=data;count.textContent=`找到 ${data.length} 条（多网盘合并结果）`;
+  }else{
+   const j=await fetchResults(params);data=j.items;lastItems=data;count.textContent=`${j.total??data.length} 条收录结果`; 
+  }
+  if(!data.length){results.innerHTML='<div class="empty">没有找到匹配结果。试试缩短关键词、切换匹配方式或选择其他网盘。多网盘查询也可能因某些来源暂时不可用而不完整。</div>';status.textContent='搜索完成';return}
+  results.innerHTML=data.map((x,i)=>card(x,i)).join('');
+  results.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copy(share(lastItems[+b.dataset.copy])));
+  results.querySelectorAll('[data-code]').forEach(b=>b.onclick=()=>copy(code(lastItems[+b.dataset.code])));
+  results.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{const u=share(lastItems[+b.dataset.open]);if(u)window.open(u,'_blank','noopener,noreferrer')});
+  results.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>feedback(lastItems[+b.dataset.report]));
+  if(params.pan!=='all'){const j=await fetchResults({...params, _forPager:true}).catch(()=>null);const totalPages=Number(j?.totalPages||1);if(page>1)addPageButton('上一页',()=>{page--;search()});if(page<totalPages)addPageButton('下一页',()=>{page++;search()})}
+  status.textContent='搜索完成 · 数据来自第三方公开索引';
+ }catch(e){count.textContent='搜索失败';status.textContent=e.message;results.innerHTML='<div class="empty">暂时无法取得结果。请稍后重试；若持续失败，请检查 Cloudflare Functions 部署状态及上游 API。</div>'}
+ finally{$('go').disabled=false;$('go').textContent='开始搜索 ↗'}
 }
+async function fetchResults(p){const u=new URLSearchParams();for(const [k,v] of Object.entries(p)){if(k.startsWith('_')||v===''||v==null)continue;u.set(k,v)}const r=await fetch('/api/search?'+u.toString());const j=await r.json();if(!r.ok||!j.ok)throw new Error(j.error||'搜索接口暂时不可用');return {...j,items:Array.isArray(j.items)?j.items:Array.isArray(j.data?.items)?j.data.items:[]}}
+function card(x,i){const u=share(x),c=code(x),pan=panName(x.pan),title=x.title||'未命名资源',cat=x.category||'资源';return `<article class="result"><h4>${esc(title)}</h4><div class="badges"><span class="badge">${esc(pan)}</span><span class="badge">${esc(cat)}</span>${x.year?`<span class="badge">${esc(x.year)}</span>`:''}</div><p class="meta">${c?'提取码：'+esc(c):'未提供提取码'}${x.size_text?' · '+esc(x.size_text):''}</p>${u?`<a class="url" href="${escAttr(u)}" target="_blank" rel="noopener noreferrer">${esc(u)}</a>`:'<span class="meta">此条记录未返回分享地址</span>'}<div class="actions">${u?`<button data-copy="${i}">复制链接</button><button data-open="${i}">打开分享</button>`:''}${c?`<button data-code="${i}">复制提取码</button>`:''}<button data-report="${i}">反馈问题</button></div></article>`}
+function share(x){return x?.share_url||x?.url||x?.link||''}function code(x){return x?.access_code||x?.code||''}
+function panName(p){return ({quark:'夸克网盘',baidu:'百度网盘',aliyun:'阿里云盘',xunlei:'迅雷网盘',uc:'UC网盘',tianyi:'天翼云盘','115':'115网盘','123':'123网盘',mobile:'移动云盘'})[p]||p||'网盘'}
+function dedupe(a){const seen=new Set();return a.filter(x=>{const k=share(x)||`${x.pan}|${x.title}`;if(seen.has(k))return false;seen.add(k);return true})}
+function addPageButton(t,fn){const b=document.createElement('button');b.textContent=t;b.onclick=fn;pager.append(b)}
+async function feedback(x){const kind=prompt('反馈类型：输入 dead_link（链接失效）或 wrong_info（信息错误）','dead_link');if(!kind)return;try{const r=await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({resource_id:Number(x?.id)||undefined,type:['dead_link','wrong_info','other'].includes(kind)?kind:'other',content:'用户从云搜页面提交反馈'})});if(!r.ok)throw Error();status.textContent='反馈已提交，谢谢。'}catch{status.textContent='暂时无法提交反馈，请稍后再试。'}}
+async function copy(t){if(!t)return;try{await navigator.clipboard.writeText(t);status.textContent='已复制到剪贴板'}catch{prompt('复制下面内容：',t)}}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function escAttr(s){return esc(s)}
-async function copy(t){if(!t)return;try{await navigator.clipboard.writeText(t);status.textContent='已复制到剪贴板'}catch(e){prompt('复制下面内容：',t)}}
+function debounce(fn,ms){let t;return(...args)=>{clearTimeout(t);t=setTimeout(()=>fn(...args),ms)}}
+async function loadStats(){try{const r=await fetch('/api/stats');const j=await r.json();if(r.ok){$('statTotal').textContent=fmt(j.total);$('statToday').textContent=fmt(j.today)}}catch{}}
+function fmt(n){return Number.isFinite(Number(n))?Number(n).toLocaleString('zh-CN'):'—'}loadStats();
 </script></body></html>
